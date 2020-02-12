@@ -10,7 +10,7 @@ This is a minimalistic example:
 ```php
 require 'vendor/autoload.php';
 
-use \Andromeda\LibuvProcess\UvProcess;
+use Andromeda\LibuvProcess\UvProcess;
 use React\EventLoop\ExtUvLoop;
 
 $loop = new ExtUvLoop();
