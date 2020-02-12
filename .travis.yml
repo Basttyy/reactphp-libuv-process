@@ -1,0 +1,46 @@
+language: php
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+dist: bionic
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+#matrix:
+#  include:
+#    - name: "Windows"
+#      os: windows
+#      language: shell # no built-in php support
+#      before_install:
+#        - choco install php
+#        - choco install composer
+#        - export PATH="$(powershell -Command '("Process", "Machine" | % { [Environment]::GetEnvironmentVariable("PATH", $_) -Split ";" -Replace "\\$", "" } | Select -Unique | % { cygpath $_ }) -Join ":"')"
+#        - source ~/.bashrc
+#        - php -v
+
+addons:
+  apt:
+    packages:
+      - libevent-dev
+      - libssl-dev
+
+before_install:
+  - sudo add-apt-repository ppa:ondrej/php -y
+  - sudo apt-get update -q
+  - sudo apt-get install libuv1-dev
+
+install:
+  - pecl install uv-beta
+#  - pecl uninstall xdebug || true
+#  - pecl install pcov
+  - composer install -n
+#  - composer require --dev pcov/clobber && vendor/bin/pcov clobber
+
+script:
+  - ./vendor/bin/phpunit --configuration phpunit.xml.dist #--coverage-text
