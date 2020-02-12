@@ -1,4 +1,4 @@
-# ReactPHP Libuv Child Processes [![Build Status](https://travis-ci.org/AndromedaGalaxy/reactphp-libuv-process.svg?branch=master)](https://travis-ci.org/AndromedaGalaxy/reactphp-libuv-process)
+# ReactPHP Libuv Child Processes [![CircleCI](https://circleci.com/gh/AndromedaGalaxy/reactphp-libuv-process.svg?style=svg)](https://circleci.com/gh/AndromedaGalaxy/reactphp-libuv-process)
 
 This library provides libuv child processes for ReactPHP.
 
