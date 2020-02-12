@@ -11,21 +11,21 @@
 
 namespace Andromeda\LibuvProcess\Tests;
 
-use Andromeda\LibuvProcess\UvProcess;
+use Andromeda\LibuvProcess\Process;
 use React\EventLoop\ExtUvLoop;
 use React\Promise\Deferred;
 use React\Stream\ReadableStreamInterface;
 use React\Stream\WritableStreamInterface;
 use function Clue\React\Block\await;
 
-class UvProcessTest extends TestCase {
+class ProcessTest extends TestCase {
     /**
      * @runInSeparateProcess
      */
     function testStartStandard() {
         $loop = new ExtUvLoop();
         
-        $process = new UvProcess('echo', array('Hello World'));
+        $process = new Process('echo', array('Hello World'));
         $process->start($loop);
         
         $this->assertInstanceOf(WritableStreamInterface::class, $process->stdin);
@@ -53,7 +53,7 @@ class UvProcessTest extends TestCase {
         $loop = new ExtUvLoop();
         
         $env = array('HELLO' => 'Hello World');
-        $process = new UvProcess(\PHP_BINARY, array('-r', 'echo getenv("HELLO");'), null, $env);
+        $process = new Process(\PHP_BINARY, array('-r', 'echo getenv("HELLO");'), null, $env);
         $process->start($loop);
         
         $this->assertInstanceOf(WritableStreamInterface::class, $process->stdin);
@@ -86,7 +86,7 @@ class UvProcessTest extends TestCase {
             null
         );
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, $fds);
+        $process = new Process('echo', array('Hello World'), null, null, $fds);
         $process->start($loop);
         
         $this->assertInstanceOf(WritableStreamInterface::class, $process->stdin);
@@ -120,7 +120,7 @@ class UvProcessTest extends TestCase {
             null
         );
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, $fds);
+        $process = new Process('echo', array('Hello World'), null, null, $fds);
         $process->start($loop);
         
         $this->assertNull($process->stdin);
@@ -161,7 +161,7 @@ class UvProcessTest extends TestCase {
             $fd
         );
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, $fds);
+        $process = new Process('echo', array('Hello World'), null, null, $fds);
         $process->start($loop);
         
         $this->assertNull($process->stdin);
@@ -183,7 +183,7 @@ class UvProcessTest extends TestCase {
             null
         );
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, $fds);
+        $process = new Process('echo', array('Hello World'), null, null, $fds);
         $process->start($loop);
         
         $this->assertNull($process->stdin);
@@ -212,7 +212,7 @@ class UvProcessTest extends TestCase {
             array('test')
         );
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, $fds);
+        $process = new Process('echo', array('Hello World'), null, null, $fds);
         
         $this->expectException(\InvalidArgumentException::class);
         $process->start($loop);
@@ -228,7 +228,7 @@ class UvProcessTest extends TestCase {
             array('pipe', 'a')
         );
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, $fds);
+        $process = new Process('echo', array('Hello World'), null, null, $fds);
         
         $this->expectException(\InvalidArgumentException::class);
         $process->start($loop);
@@ -240,7 +240,7 @@ class UvProcessTest extends TestCase {
     function testStartAlreadyRunning() {
         $loop = new ExtUvLoop();
         
-        $process = new UvProcess('echo', array('Hello World'));
+        $process = new Process('echo', array('Hello World'));
         $process->start($loop);
         
         $this->expectException(\RuntimeException::class);
@@ -254,7 +254,7 @@ class UvProcessTest extends TestCase {
         $this->markTestSkipped('Test segfaults on code coverage');
         
         $loop = new ExtUvLoop();
-        $process = new UvProcess('');
+        $process = new Process('');
         
         $this->expectException(\RuntimeException::class);
         $process->start($loop);
@@ -265,7 +265,7 @@ class UvProcessTest extends TestCase {
      */
     function testTerminate() {
         $loop = new ExtUvLoop();
-        $process = new UvProcess(\PHP_BINARY);
+        $process = new Process(\PHP_BINARY);
         
         $this->assertFalse($process->terminate(\UV::SIGINT));
         $process->start($loop);
@@ -290,7 +290,7 @@ class UvProcessTest extends TestCase {
     function testGetPid() {
         $loop = new ExtUvLoop();
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, array());
+        $process = new Process('echo', array('Hello World'), null, null, array());
         $this->assertNull($process->getPid());
         
         $process->start($loop);
@@ -303,7 +303,7 @@ class UvProcessTest extends TestCase {
     function testGetExitCode() {
         $loop = new ExtUvLoop();
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, array());
+        $process = new Process('echo', array('Hello World'), null, null, array());
         $this->assertNull($process->getExitCode());
         
         $deferred = new Deferred();
@@ -321,7 +321,7 @@ class UvProcessTest extends TestCase {
     function testGetTermSignal() {
         $loop = new ExtUvLoop();
         
-        $process = new UvProcess(\PHP_BINARY);
+        $process = new Process(\PHP_BINARY);
         $this->assertNull($process->getTermSignal());
         
         $deferred = new Deferred();
@@ -341,7 +341,7 @@ class UvProcessTest extends TestCase {
     function testIsRunning() {
         $loop = new ExtUvLoop();
         
-        $process = new UvProcess('echo', array('Hello World'), null, null, array());
+        $process = new Process('echo', array('Hello World'), null, null, array());
         $this->assertFalse($process->isRunning());
         
         $process->start($loop);

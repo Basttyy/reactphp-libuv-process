@@ -10,11 +10,11 @@ This is a minimalistic example:
 ```php
 require 'vendor/autoload.php';
 
-use Andromeda\LibuvProcess\UvProcess;
+use Andromeda\LibuvProcess\Process;
 use React\EventLoop\ExtUvLoop;
 
 $loop = new ExtUvLoop();
-$process = new UvProcess(\PHP_BINARY, array('-r', 'echo "Hello World";'));
+$process = new Process(\PHP_BINARY, array('-r', 'echo "Hello World";'));
 
 $process->on('exit', static function (int $exitCode, int $termSignal) {
     echo PHP_EOL.PHP_EOL.'Child Process exited with exit code '.$exitCode.

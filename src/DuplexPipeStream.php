@@ -14,7 +14,7 @@ use React\EventLoop\ExtUvLoop;
 use React\Stream\DuplexStreamInterface;
 use React\Stream\WritableStreamInterface;
 
-class UvDuplexPipeStream implements DuplexStreamInterface {
+class DuplexPipeStream implements DuplexStreamInterface {
     use EventEmitterTrait;
     
     /**
@@ -23,31 +23,31 @@ class UvDuplexPipeStream implements DuplexStreamInterface {
     protected $pipe;
     
     /**
-     * @var UvReadablePipeStream
+     * @var ReadablePipeStream
      */
     protected $read;
     
     /**
-     * @var UvWritablePipeStream
+     * @var WritablePipeStream
      */
     protected $write;
     
     /**
      * Constructor.
-     * @param ExtUvLoop                  $loop
-     * @param \UVPipe                    $pipe
-     * @param UvReadablePipeStream|null  $read
-     * @param UvWritablePipeStream|null  $write
+     * @param ExtUvLoop                $loop
+     * @param \UVPipe                  $pipe
+     * @param ReadablePipeStream|null  $read
+     * @param WritablePipeStream|null  $write
      */
     function __construct(
         ExtUvLoop $loop,
         \UVPipe $pipe,
-        ?UvReadablePipeStream $read = null,
-        ?UvWritablePipeStream $write = null
+        ?ReadablePipeStream $read = null,
+        ?WritablePipeStream $write = null
     ) {
         $this->pipe = $pipe;
-        $this->read = $read ?? (new UvReadablePipeStream($loop, $pipe));
-        $this->write = $write ?? (new UvWritablePipeStream($loop, $pipe));
+        $this->read = $read ?? (new ReadablePipeStream($loop, $pipe));
+        $this->write = $write ?? (new WritablePipeStream($loop, $pipe));
         
         $this->read->on('data', function ($data) {
             $this->emit('data', array($data));

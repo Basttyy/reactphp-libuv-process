@@ -14,7 +14,7 @@ use React\EventLoop\ExtUvLoop;
 use React\EventLoop\TimerInterface;
 use React\Stream\WritableStreamInterface;
 
-class UvWritablePipeStream implements WritableStreamInterface {
+class WritablePipeStream implements WritableStreamInterface {
     use EventEmitterTrait;
     
     /**
@@ -90,7 +90,7 @@ class UvWritablePipeStream implements WritableStreamInterface {
         }
         
         if($this->timeWork++ === 0) {
-            $this->timer = $this->loop->addTimer(UvProcess::UV_MAX_TIMER_INTERVAL, static function () {});
+            $this->timer = $this->loop->addTimer(Process::UV_MAX_TIMER_INTERVAL, static function () {});
         }
         
         \uv_write($this->pipe, $data, function (\UVPipe $pipe, int $status) {

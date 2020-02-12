@@ -16,7 +16,7 @@ use React\Stream\ReadableStreamInterface;
 use React\Stream\Util;
 use React\Stream\WritableStreamInterface;
 
-class UvReadablePipeStream implements ReadableStreamInterface {
+class ReadablePipeStream implements ReadableStreamInterface {
     use EventEmitterTrait;
     
     /**
@@ -100,7 +100,7 @@ class UvReadablePipeStream implements ReadableStreamInterface {
         
         // Prevents the event loop from exiting since
         // we're using the php-uv API directly
-        $this->timer = $this->loop->addTimer(UvProcess::UV_MAX_TIMER_INTERVAL, static function () {});
+        $this->timer = $this->loop->addTimer(Process::UV_MAX_TIMER_INTERVAL, static function () {});
         
         \uv_read_start($this->pipe, function (\UVPipe $pipe, int $nread, ?string $buffer) {
             if($nread === \UV::EOF) {

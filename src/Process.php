@@ -52,7 +52,7 @@ use React\Stream\WritableStreamInterface;
  *
  * The file descriptor specification is always from the view of the child.
  */
-class UvProcess implements EventEmitterInterface {
+class Process implements EventEmitterInterface {
     use EventEmitterTrait;
     
     /**
@@ -472,11 +472,11 @@ class UvProcess implements EventEmitterInterface {
     protected function prepareStdio(ExtUvLoop $loop, $pipe, ?string $mode) {
         if($pipe instanceof \UVPipe) {
             if($mode === 'r') {
-                return (new UvWritablePipeStream($loop, $pipe));
+                return (new WritablePipeStream($loop, $pipe));
             } elseif($mode === 'w') {
-                return (new UvReadablePipeStream($loop, $pipe));
+                return (new ReadablePipeStream($loop, $pipe));
             } elseif($mode === 'rw' || $mode === 'r+' || $mode === 'w+') {
-                return (new UvDuplexPipeStream($loop, $pipe));
+                return (new DuplexPipeStream($loop, $pipe));
             }
         }
         

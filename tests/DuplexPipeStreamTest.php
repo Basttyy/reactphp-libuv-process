@@ -11,16 +11,16 @@
 
 namespace Andromeda\LibuvProcess\Tests;
 
-use Andromeda\LibuvProcess\UvDuplexPipeStream;
-use Andromeda\LibuvProcess\UvReadablePipeStream;
-use Andromeda\LibuvProcess\UvWritablePipeStream;
+use Andromeda\LibuvProcess\DuplexPipeStream;
+use Andromeda\LibuvProcess\ReadablePipeStream;
+use Andromeda\LibuvProcess\WritablePipeStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use React\EventLoop\ExtUvLoop;
 use React\Promise\Deferred;
 use React\Stream\WritableStreamInterface;
 use function Clue\React\Block\await;
 
-class UvDuplexPipeStreamTest extends TestCase {
+class DuplexPipeStreamTest extends TestCase {
     /**
      * @var ExtUvLoop
      */
@@ -51,7 +51,7 @@ class UvDuplexPipeStreamTest extends TestCase {
      */
     function testEvents() {
         [ $read, $write ] = $this->createMocks();
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         
         $def1 = new Deferred();
         $stream->once('data', array($def1, 'resolve'));
@@ -112,7 +112,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->method('isReadable')
             ->willReturn(false);
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $this->assertTrue($stream->isReadable());
         $this->assertFalse($stream->isReadable());
     }
@@ -127,7 +127,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->expects($this->at(0))
             ->method('pause');
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $stream->pause();
     }
     
@@ -141,7 +141,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->expects($this->at(0))
             ->method('resume');
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $stream->resume();
     }
     
@@ -161,7 +161,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->with($dest)
             ->willReturn($dest);
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $dest2 = $stream->pipe($dest);
         $this->assertSame($dest2, $dest);
     }
@@ -178,7 +178,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->with('test')
             ->willReturn(true);
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $this->assertTrue($stream->write('test'));
     }
     
@@ -193,7 +193,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->method('end')
             ->with('test');
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $stream->end('test');
     }
     
@@ -213,7 +213,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->method('isWritable')
             ->willReturn(false);
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $this->assertTrue($stream->isWritable());
         $this->assertFalse($stream->isWritable());
     }
@@ -232,7 +232,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->expects($this->at(0))
             ->method('close');
         
-        $stream = new UvDuplexPipeStream($this->loop, $this->pipe, $read, $write);
+        $stream = new DuplexPipeStream($this->loop, $this->pipe, $read, $write);
         $stream->close();
     }
     
@@ -240,7 +240,7 @@ class UvDuplexPipeStreamTest extends TestCase {
      * @return MockObject[]
      */
     protected function createMocks(): array {
-        $read = $this->getMockBuilder(UvReadablePipeStream::class)
+        $read = $this->getMockBuilder(ReadablePipeStream::class)
             ->setMethods(array(
                 'isReadable',
                 'pause',
@@ -251,7 +251,7 @@ class UvDuplexPipeStreamTest extends TestCase {
             ->disableOriginalConstructor()
             ->getMock();
         
-        $write = $this->getMockBuilder(UvWritablePipeStream::class)
+        $write = $this->getMockBuilder(WritablePipeStream::class)
             ->setMethods(array(
                 'isWritable',
                 'write',

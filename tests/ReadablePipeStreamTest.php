@@ -11,14 +11,14 @@
 
 namespace Andromeda\LibuvProcess\Tests;
 
-use Andromeda\LibuvProcess\UvReadablePipeStream;
+use Andromeda\LibuvProcess\ReadablePipeStream;
 use React\EventLoop\ExtUvLoop;
 use React\Promise\Deferred;
 use React\Stream\WritableResourceStream;
 use function Clue\React\Block\await;
 use function Clue\React\Block\sleep;
 
-class UvReadablePipeStreamTest extends TestCase {
+class ReadablePipeStreamTest extends TestCase {
     /**
      * @var ExtUvLoop
      */
@@ -52,7 +52,7 @@ class UvReadablePipeStreamTest extends TestCase {
         
         $this->spawnProcess(true);
         
-        $stream = new UvReadablePipeStream($this->loop, $this->pipe);
+        $stream = new ReadablePipeStream($this->loop, $this->pipe);
         
         $deferred = new Deferred();
         $stream->once('error', array($deferred, 'resolve'));
@@ -66,7 +66,7 @@ class UvReadablePipeStreamTest extends TestCase {
     function testIsReadable() {
         $this->spawnProcess();
         
-        $stream = new UvReadablePipeStream($this->loop, $this->pipe);
+        $stream = new ReadablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isReadable());
         
         $deferred = new Deferred();
@@ -83,7 +83,7 @@ class UvReadablePipeStreamTest extends TestCase {
     function testResumePause() {
         $this->spawnProcess();
         
-        $stream = new UvReadablePipeStream($this->loop, $this->pipe);
+        $stream = new ReadablePipeStream($this->loop, $this->pipe);
         $stream->pause();
         
         $data = null;
@@ -120,7 +120,7 @@ class UvReadablePipeStreamTest extends TestCase {
     function testPipe() {
         $this->spawnProcess();
         
-        $stream = new UvReadablePipeStream($this->loop, $this->pipe);
+        $stream = new ReadablePipeStream($this->loop, $this->pipe);
         
         $memory = \fopen('php://memory', 'w+');
         $memstr = new WritableResourceStream($memory, $this->loop);
@@ -143,7 +143,7 @@ class UvReadablePipeStreamTest extends TestCase {
     function testClose() {
         $this->spawnProcess();
         
-        $stream = new UvReadablePipeStream($this->loop, $this->pipe);
+        $stream = new ReadablePipeStream($this->loop, $this->pipe);
         
         $deferred = new Deferred();
         $stream->once('close', array($deferred, 'resolve'));

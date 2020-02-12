@@ -11,13 +11,13 @@
 
 namespace Andromeda\LibuvProcess\Tests;
 
-use Andromeda\LibuvProcess\UvWritablePipeStream;
+use Andromeda\LibuvProcess\WritablePipeStream;
 use React\EventLoop\ExtUvLoop;
 use React\Promise\Deferred;
 use function Clue\React\Block\await;
 use function Clue\React\Block\sleep;
 
-class UvWritablePipeStreamTest extends TestCase {
+class WritablePipeStreamTest extends TestCase {
     /**
      * @var ExtUvLoop
      */
@@ -51,7 +51,7 @@ class UvWritablePipeStreamTest extends TestCase {
         
         $this->spawnProcess();
         
-        $stream = new UvWritablePipeStream($this->loop, $this->pipe);
+        $stream = new WritablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isWritable());
         
         $deferred = new Deferred();
@@ -71,7 +71,7 @@ class UvWritablePipeStreamTest extends TestCase {
     function testIsWritable() {
         $this->spawnProcess(array('-r', 'exit;'));
         
-        $stream = new UvWritablePipeStream($this->loop, $this->pipe);
+        $stream = new WritablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isWritable());
         
         $stream->close();
@@ -97,7 +97,7 @@ class UvWritablePipeStreamTest extends TestCase {
             $read->resolve();
         });
         
-        $stream = new UvWritablePipeStream($this->loop, $this->pipe);
+        $stream = new WritablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isWritable());
         
         $stream->write('<?php echo "Hello World";');
@@ -119,7 +119,7 @@ class UvWritablePipeStreamTest extends TestCase {
     function testWriteZero() {
         $this->spawnProcess();
         
-        $stream = new UvWritablePipeStream($this->loop, $this->pipe);
+        $stream = new WritablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isWritable());
         
         $this->assertTrue($stream->write(''));
@@ -148,7 +148,7 @@ class UvWritablePipeStreamTest extends TestCase {
             $read->resolve();
         });
         
-        $stream = new UvWritablePipeStream($this->loop, $this->pipe);
+        $stream = new WritablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isWritable());
         
         $deferred = new Deferred();
@@ -171,7 +171,7 @@ class UvWritablePipeStreamTest extends TestCase {
     function testClose() {
         $this->spawnProcess(array('-r', 'exit;'));
         
-        $stream = new UvWritablePipeStream($this->loop, $this->pipe);
+        $stream = new WritablePipeStream($this->loop, $this->pipe);
         $this->assertTrue($stream->isWritable());
         
         $deferred = new Deferred();
