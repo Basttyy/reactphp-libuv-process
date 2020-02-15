@@ -251,6 +251,10 @@ class ProcessTest extends TestCase {
      * @runInSeparateProcess
      */
     function testStartInvalidParams() {
+        if(\getenv('TYPE', true) !== 'git') {
+            $this->markTestSkipped('Currently only git does not segfault during coverage');
+        }
+        
         $loop = new ExtUvLoop();
         $process = new Process('');
         
