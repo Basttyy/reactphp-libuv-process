@@ -333,6 +333,8 @@ class Process implements EventEmitterInterface {
             
             $this->stdios = array();
             $this->emit('exit', array($exitCode, $termSig));
+            
+            $this->removeAllListeners();
         };
         
         $this->exitCode = null;
