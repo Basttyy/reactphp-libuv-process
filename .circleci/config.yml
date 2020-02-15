@@ -7,7 +7,7 @@ job-template: &job-template
     - run: sudo apt-get install libuv1-dev
 
     # Install PHP dependencies
-    - run: git clone https://www.github.com/bwoebi/php-uv && php-uv && phpize && ./configure && make && sudo -E make install
+    - run: git clone https://www.github.com/bwoebi/php-uv && cd php-uv && phpize && ./configure && make && sudo -E make install
     #- run: sudo -E pecl install uv-beta
     #- run: sudo -E pecl install pcov
 
