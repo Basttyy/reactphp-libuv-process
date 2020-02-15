@@ -86,11 +86,9 @@ class WritablePipeStreamTest extends TestCase {
         $this->spawnProcess(array(), array(array($stdout, \UV::WRITABLE_PIPE)));
         
         $read = new Deferred();
-        $code = null;
         $data = null;
         
-        \uv_read_start($stdout, static function ($pipe, $nread, $buffer) use ($read, &$code, &$data) {
-            $code = $nread;
+        \uv_read_start($stdout, static function ($pipe, $buffer) use ($read, &$data) {
             $data = $buffer;
             
             \uv_close($pipe, static function () {});
@@ -137,11 +135,9 @@ class WritablePipeStreamTest extends TestCase {
         $this->spawnProcess(array(), array(array($stdout, \UV::WRITABLE_PIPE)));
         
         $read = new Deferred();
-        $code = null;
         $data = null;
         
-        \uv_read_start($stdout, static function ($pipe, $nread, $buffer) use ($read, &$code, &$data) {
-            $code = $nread;
+        \uv_read_start($stdout, static function ($pipe, $buffer) use ($read, &$data) {
             $data = $buffer;
             
             \uv_close($pipe, static function () {});

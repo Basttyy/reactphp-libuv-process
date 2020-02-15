@@ -91,7 +91,6 @@ class ReadablePipeStream implements ReadableStreamInterface {
     /**
      * Resumes reading incoming data events.
      * @return void
-     * @noinspection PhpUnusedParameterInspection
      */
     function resume() {
         if($this->listening || $this->closed) {
@@ -102,7 +101,14 @@ class ReadablePipeStream implements ReadableStreamInterface {
         // we're using the php-uv API directly
         $this->timer = $this->loop->addTimer(Process::UV_MAX_TIMER_INTERVAL, static function () {});
         
-        \uv_read_start($this->pipe, function (\UVPipe $pipe, int $nread, ?string $buffer) {
+        \uv_read_start($this->pipe, function (\UVPipe $pipe, $nread) {
+            if(\is_string($nread)) {
+                $buffer = $nread;
+                $nread = 1;
+            } else {
+                $buffer = \func_get_args()[2] ?? '';
+            }
+            
             if($nread === \UV::EOF) {
                 $this->emit('end');
                 $this->close();
