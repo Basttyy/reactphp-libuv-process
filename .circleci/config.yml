@@ -27,6 +27,7 @@ job-template: &job-template
         paths:
           - $HOME/.composer/cache/files
 
+    - run: php -v
     - run: mkdir test-results
     - run: vendor/bin/phpunit --configuration phpunit.xml.dist --log-junit test-results/junit-report.xml
     - store_test_results:
