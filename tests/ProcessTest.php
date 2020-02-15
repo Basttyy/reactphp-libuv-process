@@ -251,8 +251,6 @@ class ProcessTest extends TestCase {
      * @runInSeparateProcess
      */
     function testStartInvalidParams() {
-        $this->markTestSkipped('Test segfaults on code coverage');
-        
         $loop = new ExtUvLoop();
         $process = new Process('');
         
