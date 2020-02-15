@@ -295,6 +295,10 @@ class ProcessTest extends TestCase {
         
         $process->start($loop);
         $this->assertNotNull($process->getPid());
+        
+        if(\function_exists('uv_process_get_pid')) {
+            $this->assertGreaterThan(0, $process->getPid());
+        }
     }
     
     /**

@@ -367,7 +367,7 @@ class Process implements EventEmitterInterface {
         }
         
         $this->process = $process;
-        $this->pid = 0; // TODO: Get PID from process
+        $this->pid = (\function_exists('uv_process_get_pid') ? \uv_process_get_pid($process) : 0);
         
         foreach($this->stdios as $key => $pipe) {
             $pipe = $this->prepareStdio($loop, $pipe, ($this->fdspecs[$key][1] ?? null));
@@ -405,7 +405,7 @@ class Process implements EventEmitterInterface {
     }
     
     /**
-     * Get the process ID.
+     * Get the process ID. Returns `0` if using ext-uv < 0.2.5.
      * @return int|null
      */
     function getPid(): ?int {
