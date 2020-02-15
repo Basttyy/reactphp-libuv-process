@@ -1,39 +1,51 @@
+job-template-prv: &job-template-prv
+  - checkout
+
+  # Install system dependencies
+  - run: sudo apt-get update
+  - run: sudo apt-get install libuv1-dev
+
+job-template-nxt: &job-template-nxt
+  # Add extensions to php.ini
+  - run: sudo -E docker-php-ext-enable uv
+  #- run: sudo -E docker-php-ext-enable pcov
+
+  # Download and cache dependencies
+  - restore_cache:
+      keys:
+        - dependencies
+
+  - run: composer install --no-interaction
+  #- run: composer require --dev pcov/clobber && vendor/bin/pcov clobber
+
+  - save_cache:
+      key: dependencies
+      paths:
+        - $HOME/.composer/cache/files
+
+  - run: mkdir test-results
+  - run: vendor/bin/phpunit --configuration phpunit.xml.dist --log-junit test-results/junit-report.xml
+  - store_test_results:
+      path: test-results
+
 job-template: &job-template
   steps:
-    - checkout
+    <<: *job-template-prv
+    # Install PHP dependencies
+    - run: sudo -E pecl install uv-beta
+    #- run: sudo -E pecl install pcov
+    <<: *job-template-nxt
 
-    # Install system dependencies
-    - run: sudo apt-get update
-    - run: sudo apt-get install libuv1-dev
-
+job-template-git: &job-template-git
+  steps:
+    <<: *job-template-prv
     # Install PHP dependencies
     - run: git clone https://www.github.com/bwoebi/php-uv && cd php-uv && phpize && ./configure && make && sudo -E make install
-    #- run: sudo -E pecl install uv-beta
     #- run: sudo -E pecl install pcov
-
-    # Add extensions to php.ini
-    - run: sudo -E docker-php-ext-enable uv
-    #- run: sudo -E docker-php-ext-enable pcov
-
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-          - dependencies
-
-    - run: composer install --no-interaction
-    #- run: composer require --dev pcov/clobber && vendor/bin/pcov clobber
-
-    - save_cache:
-        key: dependencies
-        paths:
-          - $HOME/.composer/cache/files
-
-    - run: mkdir test-results
-    - run: vendor/bin/phpunit --configuration phpunit.xml.dist --log-junit test-results/junit-report.xml
-    - store_test_results:
-        path: test-results
+    <<: *job-template-nxt
 
 jobs:
+  # pecl builds
   php-7.1:
     docker:
       - image: circleci/php:7.1
@@ -73,6 +85,47 @@ jobs:
     docker:
       - image: circleci/php:7.4-zts
     <<: *job-template
+
+  # git builds
+  php-7.1-git:
+    docker:
+      - image: circleci/php:7.1
+    <<: *job-template-git
+
+  php-7.1-zts-git:
+    docker:
+      - image: circleci/php:7.1-zts
+    <<: *job-template-git
+
+  php-7.2-git:
+    docker:
+      - image: circleci/php:7.2
+    <<: *job-template-git
+
+  php-7.2-zts-git:
+    docker:
+      - image: circleci/php:7.2-zts
+    <<: *job-template-git
+
+  php-7.3-git:
+    docker:
+      - image: circleci/php:7.3
+    <<: *job-template-git
+
+  php-7.3-zts-git:
+    docker:
+      - image: circleci/php:7.3-zts
+    <<: *job-template-git
+
+  php-7.4-git:
+    docker:
+      - image: circleci/php:7.4
+    <<: *job-template-git
+
+  php-7.4-zts-git:
+    docker:
+      - image: circleci/php:7.4-zts
+    <<: *job-template-git
 
 workflows:
   version: 2
