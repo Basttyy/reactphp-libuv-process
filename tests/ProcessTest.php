@@ -251,7 +251,7 @@ class ProcessTest extends TestCase {
      * @runInSeparateProcess
      */
     function testStartInvalidParams() {
-        if(\defined('PHP_ZTS') && \getenv('TYPE', true) !== 'git') {
+        if(\PHP_ZTS === 1 && \getenv('TYPE', true) !== 'git') {
             $this->markTestSkipped('Currently only git does not segfault during coverage');
         }
         
