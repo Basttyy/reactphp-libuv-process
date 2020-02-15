@@ -89,7 +89,7 @@ class WritablePipeStreamTest extends TestCase {
         $data = null;
         
         \uv_read_start($stdout, static function ($pipe, $buffer) use ($read, &$data) {
-            $data = $buffer;
+            $data = (\is_string($buffer) ? $buffer : \func_get_args()[2]);
             
             \uv_close($pipe, static function () {});
             $read->resolve();
@@ -138,7 +138,7 @@ class WritablePipeStreamTest extends TestCase {
         $data = null;
         
         \uv_read_start($stdout, static function ($pipe, $buffer) use ($read, &$data) {
-            $data = $buffer;
+            $data = (\is_string($buffer) ? $buffer : \func_get_args()[2]);
             
             \uv_close($pipe, static function () {});
             $read->resolve();
