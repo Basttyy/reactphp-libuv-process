@@ -7,7 +7,7 @@ job-template: &job-template
     - run: sudo apt-get install libuv1-dev
 
     # Install PHP dependencies
-    - run: if [[ "$TYPE" = "git" ] then git clone https://www.github.com/bwoebi/php-uv && cd php-uv && phpize && ./configure && make && sudo -E make install; else sudo -E pecl install uv-beta; fi
+    - run: if [[ "$TYPE" = "git" ]]; then git clone https://www.github.com/bwoebi/php-uv && cd php-uv && phpize && ./configure && make && sudo -E make install; else sudo -E pecl install uv-beta; fi
     #- run: sudo -E pecl install pcov
 
     # Add extensions to php.ini
@@ -159,3 +159,11 @@ workflows:
       - php-7.3-zts
       - php-7.4
       - php-7.4-zts
+      - php-7.1-git
+      - php-7.1-zts-git
+      - php-7.2-git
+      - php-7.2-zts-git
+      - php-7.3-git
+      - php-7.3-zts-git
+      - php-7.4-git
+      - php-7.4-zts-git
