@@ -40,7 +40,7 @@ job-template-win: &job-template-win
     - checkout
     
      # install system dependencies
-    - run: if ($env:PHP_TYPE -imatch "ts") { choco install php --package-parameters='"/ThreadSafe "' } else { choco install php }
+    - run: if ($env:PHP_TYPE -eq "ts") { choco install php --package-parameters='"/ThreadSafe "' } else { choco install php }
     - run: choco install composer
     #- run: export PATH="$(powershell -Command '("Process", "Machine" | % { [Environment]::GetEnvironmentVariable("PATH", $_) -Split ";" -Replace "\\$", "" } | Select -Unique | % { cygpath $_ }) -Join ":"')"
 
