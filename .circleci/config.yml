@@ -27,7 +27,7 @@ job-template: &job-template
     - save_cache:
         key: dependencies
         paths:
-          - $HOME/.composer/cache/files
+          - /home/circleci/.composer/cache/files
 
     - run: php -v
     - run: mkdir test-results
@@ -38,11 +38,25 @@ job-template: &job-template
 job-template-win: &job-template-win
   steps:
     - checkout
-    
+
+    # set choco cache location
+    - run: mkdir C:\choco-cache
+    - run: choco config set cacheLocation C:\choco-cache
+
+    # Restore system dependencies cache
+    - restore_cache:
+        keys:
+          - sys-dependencies
+
      # install system dependencies
     - run: if ($env:PHP_TYPE -eq "ts") { choco install php --package-parameters='"/ThreadSafe "' } else { choco install php }
     - run: choco install composer
-    #- run: export PATH="$(powershell -Command '("Process", "Machine" | % { [Environment]::GetEnvironmentVariable("PATH", $_) -Split ";" -Replace "\\$", "" } | Select -Unique | % { cygpath $_ }) -Join ":"')"
+
+    # Cache system dependencies
+    - save_cache:
+        key: sys-dependencies
+        paths:
+          - C:\choco-cache
 
     # prevent console output errors ...
 
@@ -70,7 +84,7 @@ job-template-win: &job-template-win
     - save_cache:
         key: dependencies
         paths:
-          - $HOME/.composer/cache/files
+          - /home/circleci/.composer/cache/files
 
     - run: php.exe -v
     - run: mkdir test-results
