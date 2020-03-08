@@ -60,11 +60,7 @@ class Process implements EventEmitterInterface {
      * @var int
      * @source
      */
-    const DEFAULT_PROCESS_FLAGS_WIN = (
-        16 | // UV_PROCESS_WINDOWS_HIDE
-        32 | // UV_PROCESS_WINDOWS_HIDE_CONSOLE
-        64   // UV_PROCESS_WINDOWS_HIDE_GUI
-    );
+    const DEFAULT_PROCESS_FLAGS_WIN = \UV::PROCESS_WINDOWS_HIDE;
     
     /**
      * The maximum timer interval that is allowed.
