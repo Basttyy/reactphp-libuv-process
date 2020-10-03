@@ -251,6 +251,10 @@ class ProcessTest extends TestCase {
      * @runInSeparateProcess
      */
     function testStartInvalidParams() {
+        if(\PHP_ZTS === 1 && \getenv('TYPE', true) !== 'git') {
+            $this->markTestSkipped('Currently only git does not segfault during coverage');
+        }
+        
         $loop = new ExtUvLoop();
         $process = new Process('');
         
@@ -292,9 +296,11 @@ class ProcessTest extends TestCase {
         $this->assertNull($process->getPid());
         
         $process->start($loop);
-        
         $this->assertNotNull($process->getPid());
-        $this->assertGreaterThan(0, $process->getPid());
+        
+        if(\function_exists('uv_process_get_pid')) {
+            $this->assertGreaterThan(0, $process->getPid());
+        }
     }
     
     /**
