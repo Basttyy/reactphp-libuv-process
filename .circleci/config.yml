@@ -31,7 +31,7 @@ job-template: &job-template
 
     - run: php -v
     - run: mkdir test-results
-    - run: vendor/bin/phpunit --configuration phpunit.xml.dist --log-junit test-results/junit-report.xml --coverage-text
+    - run: XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --log-junit test-results/junit-report.xml --coverage-text
     - store_test_results:
         path: test-results
 
@@ -49,7 +49,7 @@ job-template-win: &job-template-win
           - sys-dependencies-
 
      # install system dependencies
-    - run: if ($env:PHP_TYPE -eq "ts") { choco install php --package-parameters='"/ThreadSafe "' } else { choco install php }
+    - run: if ($env:PHP_TYPE -eq "ts") { choco install php --version=7.4.23 --package-parameters='"/ThreadSafe "' } else { choco install php --version=7.4.23 }
     - run: choco install composer
 
     # Cache system dependencies
@@ -88,7 +88,7 @@ job-template-win: &job-template-win
 
     - run: php.exe -v
     - run: mkdir test-results
-    - run: vendor\bin\phpunit --configuration phpunit.xml.dist --log-junit test-results\junit-report.xml --coverage-text
+    - run: XDEBUG_MODE=coverage vendor\bin\phpunit --configuration phpunit.xml.dist --log-junit test-results\junit-report.xml --coverage-text
     - store_test_results:
         path: test-results
 
@@ -253,3 +253,4 @@ workflows:
       # windows builds
       - php-win
       - php-zts-win
+      
