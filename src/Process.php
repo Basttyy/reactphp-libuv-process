@@ -294,10 +294,7 @@ class Process implements EventEmitterInterface {
                 $fdspecs[] = \uv_stdio_new($fd, \UV::INHERIT_FD);
                 $this->stdios[] = $fd;
             } elseif($fd === null) {
-                $null = (\PHP_OS_FAMILY === 'Windows' ? 'nul' : '/dev/null');
-                $fd = \fopen($null, 'r+b');
-                
-                $fdspecs[] = \uv_stdio_new($fd, \UV::INHERIT_FD);
+                $fdspecs[] = $fd = \uv_stdio_new();
                 $this->stdios[] = $fd;
             } else {
                 throw new \InvalidArgumentException(
