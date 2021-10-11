@@ -294,7 +294,7 @@ class Process implements EventEmitterInterface {
                 $fdspecs[] = \uv_stdio_new($fd, \UV::INHERIT_FD);
                 $this->stdios[] = $fd;
             } elseif($fd === null) {
-                $fdspecs[] = $fd = \uv_stdio_new();
+                $fdspecs[] = $fd = \uv_stdio_new(null);
                 $this->stdios[] = $fd;
             } else {
                 throw new \InvalidArgumentException(
